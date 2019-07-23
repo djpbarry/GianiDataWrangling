@@ -64,12 +64,12 @@ for (f in files){
   n <- nrow(thisData);
   for(tp in treatedPatterns){
     if(grepl(tp, f)){
-      treated <- data.frame(Treatment=1);
+      treated <- data.frame(Treatment=TREATED_VALUE);
     }
   }
   for(cp in controlPatterns){
     if(grepl(cp, f)){
-      treated <- data.frame(Treatment=0);
+      treated <- data.frame(Treatment=CONTROL_VALUE);
     }
   }
   for(i in 1:n){

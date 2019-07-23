@@ -1,5 +1,10 @@
+library(Rmisc);
+
+confLevel <- 0.95;
 directory <- "D:/OneDrive - The Francis Crick Institute/Working Data/Niakan/Claudia/GIANI_Paper";
 treatmentHeading = "Treatment";
+CONTROL_VALUE <- 1;
+TREATED_VALUE <- 2;
 embryoHeading = "Embryo";
 NUCLEUS <- "Nucleus";
 CYTOPLASM <- "Cytoplasm";
@@ -15,12 +20,16 @@ VOLUME_VOX <- "Volume_Vox";
 VOLUME_MICRONS <- "Volume_microns";
 SURFACE_AREA_VOXELS <- "Surface_Area_Voxels";
 SURFACE_AREA_MICRONS <- "Surface_Area_microns";
-NUCLEUS_SURFACE_AREA_MIC <- "Nucleus_Surface_Area_microns";
-NUCLEUS_VOLUME_MIC <- "Nucleus_Volume_microns";
-CELL_SURFACE_AREA_MIC <- "Cell_Surface_Area_microns";
-CELL_VOLUME_MIC <- "Cell_Volume_microns";
+NUCLEUS_SURFACE_AREA_MIC <- paste(NUCLEUS, SURFACE_AREA_MICRONS, sep="_");
+NUCLEUS_VOLUME_MIC <- paste(NUCLEUS, VOLUME_MICRONS, sep="_");
+CELL_SURFACE_AREA_MIC <- paste(CELL, SURFACE_AREA_MICRONS, sep="_");
+CELL_VOLUME_MIC <- paste(CELL, VOLUME_MICRONS, sep="_");
 DISTANCE_TO_CENTRE <- "Distance_To_Centre";
-NUCLEAR_SURFACE_AREA_MICRONS_VERSUS_DISTANCE <- paste(NUCLEUS_SURFACE_AREA_MIC, "Versus", "Distance", sep="_");
+NUC_TO_CELL_VOLUME_RATIO <- paste(NUCLEUS, "to", CELL, "Volume Ratio", sep="_");
+VERSUS_DISTANCE <- paste("Versus", "Distance", sep="_");
+CELL_VOLUME_MICRONS_VERSUS_DISTANCE <- paste(CELL_VOLUME_MIC, VERSUS_DISTANCE, sep="_");
+GATA_VERSUS_DISTANCE <- paste(GATA, VERSUS_DISTANCE, sep="_");
+YAP_VERSUS_DISTANCE <- paste(YAP, "Ratio", VERSUS_DISTANCE, sep="_");
 
 TREATED <- "Treated";
 CONTROL <- "Control";
