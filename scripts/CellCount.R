@@ -19,15 +19,7 @@ cellCounts <- merge(cellCounts[[CONTROL_VALUE]], cellCounts[[TREATED_VALUE]], by
 
 write.csv(cellCounts, paste("outputs", "cell_counts.csv", sep="/"));
 
-interval <- c(CI(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], confLevel), CI(cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], confLevel));
-
-cellCountResults <- data.frame(matrix(c(interval[3], interval[1], interval[6], interval[4]), nrow=1,ncol=4));
-colnames(cellCountResults) <- c(paste(CONTROL, "lower", confLevel * 100, "% limit"),
-                       paste(CONTROL, "upper", confLevel * 100, "% limit"),
-                       paste(TREATED, "lower", confLevel * 100, "% limit"),
-                       paste(TREATED, "upper", confLevel * 100, "% limit"));
-
-print(cellCountResults)
+saveConfidenceIntervals(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], "outputs", "cell_counts_CI.csv");
 
 pdf(paste("plots", "cell_counts.pdf", sep=.Platform$file.sep));
 

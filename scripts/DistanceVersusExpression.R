@@ -26,60 +26,26 @@ for(e in embryos){
   }
   for(i in 1:length(counts)){
     if(counts[i] > 0){
-      for(j in 1:2){
+      for(j in 1:length(averageEmbryoExpressionVersusDistance)){
         averageEmbryoExpressionVersusDistance[[j]][[t]][[i]] <- append(averageEmbryoExpressionVersusDistance[[j]][[t]][[i]], currentEmbryoExpressionVersusDistance[i,j] / counts[i]);
       }
     }
   }
 }
 
-# Nuclear volume plot
+meansErr <- getMeansErrors(2, 2, averageEmbryoExpressionVersusDistance);
 
-means <- matrix(nrow=11,ncol=4);
-err <- matrix(nrow=11,ncol=4);
-
-for(j in 1:2){
-  for(t in 1:2){
-    for(i in 1:length(averageEmbryoExpressionVersusDistance[[j]][[t]])){
-      if(length(averageEmbryoExpressionVersusDistance[[j]][[t]][[i]]) > 1){
-        means[i, t + (j-1)*2] <- mean(unlist(averageEmbryoExpressionVersusDistance[[j]][[t]][[i]]));
-        interval <- CI(unlist(averageEmbryoExpressionVersusDistance[[j]][[t]][[i]]), confLevel);
-        err[i,t+(j-1)*2] <- interval[1] - interval[2];
-      } else {
-        means[i,t+(j-1)*2] <- unlist(averageEmbryoExpressionVersusDistance[[j]][[t]][[i]]);
-        err[i,t+(j-1)*2] <- 0.0;
-      }
-    }
-  }
-}
+means <- unlist(meansErr[[1]]);
+err <- unlist(meansErr[[2]]);
 
 x <- seq(from=0,to=1,by=0.1);
+xLabel <- "Normalised Distance to Embryo Centre";
+gataExpressLabel <- paste(GATA, "Expression (AU)");
+yapExpressLabel <- paste(NUCLEUS, ":", CYTOPLASM, YAP, "Expression Ratio");
+gataDistLabel <- paste(NUCLEUS, GATA, "Expression Versus Distance");
+yapDistLabel <- paste(NUCLEUS, ":", CYTOPLASM, YAP, "Expression Versus Distance");
 
-pdf(paste("plots", "gata3_nuc_expression_versus_distance.pdf", sep=.Platform$file.sep));
+savePlot("plots", "gata3_nuc_expression_versus_distance.pdf", x, means[,1], means[,2], err[,1], err[,2], gataDistLabel, xLabel, gataExpressLabel, c(0,60));
+savePlot("plots", "nuc_to_cyto_yap1_expression_ratio_versus_distance.pdf", x, means[,3], means[,4], err[,3], err[,4], yapDistLabel, xLabel, yapExpressLabel, c(0,4));
 
-plot(x, means[,1], xlab="Normalised Distance from Embryo Centre", main="Nuclear GATA3 Expression Versus Distance", ylab="GATA3 Expression (AU)", ylim=c(0,60), col="red", pch=15);
-arrows(x, means[,1]-err[,1], x, means[,1]+err[,1], length=0.05, angle=90, code=3, col="red");
-
-points(x, means[,2], col="green", pch=15);
-arrows(x, means[,2]-err[,2], x, means[,2]+err[,2], length=0.05, angle=90, code=3, col="green");
-
-legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
-
-dev.off();
-
-
-
-pdf(paste("plots", "nuc_to_cyto_yap1_expression_ratio_versus_distance.pdf", sep=.Platform$file.sep));
-
-plot(x, means[,3], xlab="Normalised Distance from Embryo Centre", main="Nuclear:Cytoplasm YAP1 Expression Versus Distance", ylab="Nuclear:Cytoplasm YAP1 Expression Ratio", ylim=c(0,4), col="red", pch=15);
-arrows(x, means[,3]-err[,3], x, means[,3]+err[,3], length=0.05, angle=90, code=3, col="red");
-
-points(x, means[,4], col="green", pch=15);
-arrows(x, means[,4]-err[,4], x, means[,4]+err[,4], length=0.05, angle=90, code=3, col="green");
-
-legend("bottomright", c(CONTROL, TREATED), fill=c("red", "green"));
-
-dev.off();
-
-
-# write.csv(averageEmbryoExpressionVersusDistance, paste("outputs", "cell_morphology_versus_distance.csv", sep="/"));
+saveMeanErrors(x, means, err, c(xLabel, gataExpressLabel, yapExpressLabel), "outputs", "expression_versus_distance.csv");

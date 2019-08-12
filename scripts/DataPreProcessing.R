@@ -107,10 +107,8 @@ for (f in files){
                                    INTEGRATED_DENSITY));
     morphData <- NULL;
     if(channel == 0){
-      morphData <- buildDataFrame(c(thisData$Volume..Voxels.[i],
-                                    thisData$Volume..Âµm.3.[i],
-                                    thisData$Surface.Area..Voxels.[i],
-                                    thisData$Surface.Area..Âµm.2.[i]),
+      dataEntries <- c(thisData$Volume..Voxels.[i], thisData$Volume..µm.3.[i], thisData$Surface.Area..Voxels.[i], thisData$Surface.Area..µm.2.[i]);
+      morphData <- buildDataFrame(dataEntries,
                                   1,
                                   4,
                                   regionLabel,

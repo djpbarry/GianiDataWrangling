@@ -1,6 +1,6 @@
 library(Rmisc);
 
-confLevel <- 0.95;
+CONF_LEVEL <- 0.95;
 directory <- "D:/OneDrive - The Francis Crick Institute/Working Data/Niakan/Claudia/GIANI_Paper";
 treatmentHeading = "Treatment";
 CONTROL_VALUE <- 1;
@@ -52,6 +52,86 @@ buildDataFrame <- function(data_entries, nRows, nCols, label1, label2, headings)
   }
 
   colnames(output) <- colHeadings;
-
+  #browser();
   return(output);
+}
+
+saveHistogram <- function(outputDirectory, filename, controlData, treatedData, colour1, colour2, heading, xLabel, yLabel, xLimits, yLimits, binning){
+  pdf(paste(outputDirectory, filename, sep=.Platform$file.sep));
+  
+  hist(controlData, col=colour1, border="black", main=heading, ylab=yLabel,xlab=xLabel, xlim=xLimits, ylim=yLimits, breaks=binning);
+  hist(treatedData, col=colour2, border="black", breaks=binning, add=TRUE);
+  legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
+  
+  dev.off();
+}
+
+saveConfidenceIntervals <- function(controlData, treatedData, outputDir, filename){
+  interval <- c(CI(controlData, CONF_LEVEL), CI(treatedData, CONF_LEVEL));
+  
+  ciResults <- data.frame(matrix(interval, nrow=1,ncol=6));
+  colnames(ciResults) <- c(paste(CONTROL, "upper", CONF_LEVEL * 100, "% limit"),
+                                  paste(CONTROL, "mean"),
+                                  paste(CONTROL, "lower", CONF_LEVEL * 100, "% limit"),
+                                  paste(TREATED, "upper", CONF_LEVEL * 100, "% limit"),
+                                  paste(TREATED, "mean"),
+                                  paste(TREATED, "lower", CONF_LEVEL * 100, "% limit"));
+  
+  write.csv(ciResults, paste(outputDir, filename, sep="/"));
+}
+
+savePlot <- function(outputDir, filename, x, controlData, treatedData, controlErr, treatedErr, title, xLabel, yLabel, yLimits){
+  pdf(paste(outputDir, filename, sep=.Platform$file.sep));
+  
+  plot(x, controlData, xlab=xLabel, main=title, ylab=yLabel, ylim=yLimits, col="red", pch=15);
+  arrows(x, controlData-controlErr, x, controlData+controlErr, length=0.05, angle=90, code=3, col="red");
+  
+  points(x, treatedData, col="green", pch=15);
+  arrows(x, treatedData-treatedErr, x, treatedData+treatedErr, length=0.05, angle=90, code=3, col="green");
+  
+  legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
+  
+  dev.off();
+}
+
+getMeansErrors <- function(params, conditions, inputData){
+  
+  length <- length(inputData[[j]][[t]]);
+  means <- matrix(nrow=length,ncol=params*conditions);
+  err <- matrix(nrow=length,ncol=params*conditions);
+  
+  for(j in 1:params){
+    for(t in 1:conditions){
+      for(i in 1:length){
+        if(length(inputData[[j]][[t]][[i]]) > 1){
+          means[i, t + (j-1)*2] <- mean(unlist(inputData[[j]][[t]][[i]]));
+          interval <- CI(unlist(inputData[[j]][[t]][[i]]), CONF_LEVEL);
+          err[i,t+(j-1)*2] <- interval[1] - interval[2];
+        } else {
+          means[i,t+(j-1)*2] <- unlist(inputData[[j]][[t]][[i]]);
+          err[i,t+(j-1)*2] <- 0.0;
+        }
+      }
+    }
+  }
+  return(list(means, err));
+}
+
+saveMeanErrors <- function(x, means, err, labels, outputDir, filename){
+  meanErrDataFrame <- data.frame(cbind(x, means, err));
+  newColLabels <- c(labels[1]);
+  for(i in 2:length(labels)){
+    newColLabels <- cbind(newColLabels,
+                          paste(CONTROL, MEAN, labels[i]),
+                          paste(TREATED, MEAN, labels[i]));
+  }
+  for(i in 2:length(labels)){
+    newColLabels <- cbind(newColLabels,
+                          paste(CONTROL, CONF_LEVEL*100, "% CI of ", labels[i]),
+                          paste(TREATED, CONF_LEVEL*100, "% CI of ", labels[i]));
+  }
+  
+  colnames(meanErrDataFrame) <- newColLabels;
+  
+  write.csv(meanErrDataFrame, paste(outputDir, filename, sep="/"));
 }
