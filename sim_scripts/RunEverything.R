@@ -1,5 +1,3 @@
-source("scripts/DataPreProcessing.R");
-source("scripts/cellCount.R");
-source("scripts/CellMorphology.R");
-source("scripts/DistanceVersusMorphology.R");
-source("scripts/DistanceVersusExpression.R");
+source("sim_scripts/DataPreProcessing.R");
+source("sim_scripts/cellCount.R");
+source("sim_scripts/Morphology.R");

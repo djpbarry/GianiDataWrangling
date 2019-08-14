@@ -1,11 +1,8 @@
 library(Rmisc);
 
 CONF_LEVEL <- 0.95;
-directory <- "D:/debugging/SimImages";
-treatmentHeading = "Treatment";
-CONTROL_VALUE <- 1;
-TREATED_VALUE <- 2;
-embryoHeading = "Embryo";
+directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/sim_data";
+INDEX = "Index";
 NUCLEUS <- "Nucleus";
 CYTOPLASM <- "Cytoplasm";
 CELL <- "Cell";
@@ -13,15 +10,12 @@ VOLUME_VOX <- "Volume_Vox";
 VOLUME_MICRONS <- "Volume_microns";
 SURFACE_AREA_VOXELS <- "Surface_Area_Voxels";
 SURFACE_AREA_MICRONS <- "Surface_Area_microns";
-NUCLEUS_SURFACE_AREA_MIC <- paste(NUCLEUS, SURFACE_AREA_MICRONS, sep="_");
-NUCLEUS_VOLUME_MIC <- paste(NUCLEUS, VOLUME_MICRONS, sep="_");
-CELL_SURFACE_AREA_MIC <- paste(CELL, SURFACE_AREA_MICRONS, sep="_");
-CELL_VOLUME_MIC <- paste(CELL, VOLUME_MICRONS, sep="_");
+GT_CELL_VOLUME_MIC <- "Cell_Volume_Microns_Cubed";
 MEAN <- "Mean";
-GIANI <- "GIANI v2.060_Output/GIANI v2.060_Output.csv";
-GROUND_TRUTH <- "Ground_Truth_Data.csv";
+GIANI_FILE <- "GIANI v2.060_Sim_Image.tif_S0_Output/GIANI v2.060_Output.csv";
+GROUND_TRUTH_FILE <- "Ground_Truth_Data.csv";
 SNR <- "snr";
-RUN <- "Run_";
+RUN <- "run_";
 GT_CENTROID_X <- "Nucleus_Centroid_X";
 GT_CENTROID_Y <- "Nucleus_Centroid_Y";
 GT_CENTROID_Z <- "Nucleus_Centroid_Z";
@@ -30,7 +24,12 @@ GD_CENTROID_Y <- "Centroid_Y";
 GD_CENTROID_Z <- "Centroid_Z";
 GROUND_TRUTH_FOUND <- "Ground_Truth_Found";
 CENTROID_ERROR <- "Centroid_Error";
+CELL_COUNT_ERROR <- "Cell_Count_Error";
 LABEL <- "Label";
+MEASURED_N <- "Measured_Cell_Count";
+GROUND_TRUTH_N <- "Ground_Truth_Cell_Count";
+VOL_ERROR <- "Volume_Error";
+NORM_VOL_ERROR <- "Normalised_Volume_Error"
 
 euclidDistance <- function(v1, v2){
   if(length(v1) != length(v2)) return(NaN);
@@ -70,6 +69,30 @@ saveHistogram <- function(outputDirectory, filename, controlData, treatedData, c
   legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
   
   dev.off();
+}
+
+saveConfidenceInterval <- function(data, headings, outputDir, filename){
+  n <- ncol(data);
+  
+  browser();
+  
+  interval <- c(CI(data, CONF_LEVEL));
+  
+  ciResults <- data.frame(matrix(interval, nrow=1,ncol=3 * n));
+  
+  ciHeadings <- c(paste(headings[1], "upper", CONF_LEVEL * 100, "% limit"),
+                  paste(headings[1], "mean"),
+                  paste(headings[1], "lower", CONF_LEVEL * 100, "% limit"));
+  
+  for(i in 2:n){
+    ciHeadings <- c(paste(headings[i], "upper", CONF_LEVEL * 100, "% limit"),
+                             paste(headings[i], "mean"),
+                             paste(headings[i], "lower", CONF_LEVEL * 100, "% limit"));
+  }
+  
+  colnames(ciResults) <- ciHeadings;
+  
+  write.csv(ciResults, paste(outputDir, filename, sep="/"));
 }
 
 saveConfidenceIntervals <- function(controlData, treatedData, outputDir, filename){

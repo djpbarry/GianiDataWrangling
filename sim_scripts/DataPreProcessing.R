@@ -1,28 +1,31 @@
 source("sim_scripts/Definitions.R");
 
-nuc <- 1;
-cyto <- 3;
-cell <- 5;
-
 files <- list.files(path = directory, pattern = "Image Simulator_Output", recursive = TRUE, full.names = TRUE, include.dirs = TRUE);
 
 allData <- data.frame();
-falsePositives <- data.frame();
+
+index <- 0;
 
 for (f in files){
-  groundTruthData <- read.csv(file.path(f, GROUND_TRUTH));
-  gianiData <- read.csv(file.path(f, GIANI));
+  groundTruthData <- read.csv(file.path(f, GROUND_TRUTH_FILE));
+  gianiData <- read.csv(file.path(f, GIANI_FILE));
+  
   gianiColNames <- colnames(gianiData);
   nucGianiData <- subset(gianiData, grepl(NUCLEUS, gianiData[[LABEL]]));
   cellGianiData <- subset(gianiData, grepl(CELL, gianiData[[LABEL]]));
+  
   nGD <- nrow(nucGianiData);
   nGT <- nrow(groundTruthData);
+  
   gtFoundCol <- matrix(data=0,ncol=1,nrow=nGD);
   colnames(gtFoundCol) <- c(GROUND_TRUTH_FOUND);
   nucGianiData <- cbind(nucGianiData, gtFoundCol);
-  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 5))
-  colnames(appendage) <- c(GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z, CENTROID_ERROR,gianiColNames[5]);
+  
+  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 7))
+  colnames(appendage) <- c(GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z,  gianiColNames[5], CENTROID_ERROR, VOL_ERROR, NORM_VOL_ERROR);
+  
   thisData <- cbind(groundTruthData, appendage);
+  
   for(i in 1:nGD){  
     gdx <- gianiData[[GD_CENTROID_X]][i];
     gdy <- gianiData[[GD_CENTROID_Y]][i];
@@ -40,20 +43,15 @@ for (f in files){
         minDistIndex <- j;
       }
     }
-    
-    if(!is.nan(thisData[[CENTROID_ERROR]][minDistIndex])){
-      print("duplicate");
-    }
-    if(nucGianiData[[GROUND_TRUTH_FOUND]][i] < 1 && (is.nan(thisData[[CENTROID_ERROR]][minDistIndex]) || thisData[[CENTROID_ERROR]][minDistIndex] > minDist)){
+    if(is.nan(thisData[[CENTROID_ERROR]][minDistIndex]) || thisData[[CENTROID_ERROR]][minDistIndex] > minDist){
       thisData[[GD_CENTROID_X]][minDistIndex] <- gdx;
       thisData[[GD_CENTROID_Y]][minDistIndex] <- gdy;
       thisData[[GD_CENTROID_Z]][minDistIndex] <- gdz;
       thisData[[CENTROID_ERROR]][minDistIndex] <- minDist;
       thisData[[gianiColNames[5]]][minDistIndex] <- cellGianiData[[gianiColNames[5]]][i];
+      thisData[[VOL_ERROR]][minDistIndex] <- thisData[[gianiColNames[5]]][minDistIndex] - thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
+      thisData[[NORM_VOL_ERROR]][minDistIndex] <- thisData[[VOL_ERROR]][minDistIndex] / thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
       nucGianiData[[GROUND_TRUTH_FOUND]][i] <- 1;
-    } else {
-      #thisFalsePositive <- data.frame(c(gdx, gdy, gdz, cellGianiData[[gianiColNames[5]]][i]));
-      falsePositives <- rbind(falsePositives, data.frame(c(gdx, gdy, gdz, cellGianiData[[gianiColNames[5]]][i])));
     }
   }
   snrStartPos <- regexpr(SNR, f) + nchar(SNR);
@@ -64,8 +62,18 @@ for (f in files){
   runEndPos <- runStartPos + regexpr(.Platform$file.sep, substr(f, runStartPos, nchar(f))) - 2;
   run <- as.numeric(substr(f, runStartPos, runEndPos));
   
-  extraCols <- cbind(matrix(data=snr,ncol=1,nrow=nGT), matrix(data=run,ncol=1,nrow=nGT));
-  colnames(extraCols) <- c(SNR, RUN);
+  extraCols <- cbind(matrix(data=snr,ncol=1,nrow=nGT),
+                     matrix(data=run,ncol=1,nrow=nGT),
+                     matrix(data=nGT,ncol=1,nrow=nGT),
+                     matrix(data=nGD,ncol=1,nrow=nGT),
+                     matrix(data=nGD - nGT,ncol=1,nrow=nGT),
+                     matrix(data=index,ncol=1,nrow=nGT));
+  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, INDEX);
+  
   thisData <- cbind(thisData, extraCols);
   allData <- rbind(allData, thisData);
+  
+  index <- index + 1;
 }
+
+write.csv(allData, paste("outputs", "all_data.csv", sep="/"));

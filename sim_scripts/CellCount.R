@@ -1,30 +1,23 @@
-source("scripts/Definitions.R");
+source("sim_scripts/Definitions.R");
 
-outputHeadings <- c(CONTROL, TREATED);
+#write.csv(cellCounts, paste("outputs", "cell_counts.csv", sep="/"));
 
-embryoData <- allData[[embryoHeading]];
-embryos <- unique(embryoData);
-cellCounts <- list(data.frame(x=NULL), data.frame(x=NULL));
+#saveConfidenceInterval(cbind(cellCounts[[CELL_COUNT_ERROR]][cellCounts[[SNR]] == 1], cellCounts[[CELL_COUNT_ERROR]][cellCounts[[SNR]] == 2], cellCounts[[CELL_COUNT_ERROR]][cellCounts[[SNR]] == 3]), c("1", "2", "3"), "outputs", "cell_count_error_CI.csv");
 
-for(e in embryos){
-  thisData <- subset(allData, embryoData==e);
-  treatmentData <- thisData[[treatmentHeading]];
-  row <- data.frame(matrix(ncol = 1, nrow = 0));
-  colnames(row) <- outputHeadings[treatmentData[1]];
-  row[1,1] <- nrow(thisData);
-  cellCounts[[treatmentData[1]]] <- rbind(cellCounts[[treatmentData[1]]], row);
-}
+pdf(paste("plots", "cell_count_error_versus_snr.pdf", sep=.Platform$file.sep));
+boxplot(Cell_Count_Error~snr, data=allData[!duplicated(allData$Index),], main="Cell Count Error", xlab="SNR", ylab="Cell Count Error", notch=TRUE, col=(c("darkgreen")));
+legend("topright", c("2"), fill=c("darkgreen"));
 
-cellCounts <- merge(cellCounts[[CONTROL_VALUE]], cellCounts[[TREATED_VALUE]], by = 0, all = TRUE)[-1];
+dev.off();
 
-write.csv(cellCounts, paste("outputs", "cell_counts.csv", sep="/"));
+pdf(paste("plots", "centroid_error_versus_snr.pdf", sep=.Platform$file.sep));
+boxplot(Centroid_Error~snr, data=allData, main="Centroid Error", xlab="SNR", ylab="Centroid Error (Microns)", notch=TRUE, col=(c("darkgreen")));
+legend("topright", c("2"), fill=c("darkgreen"));
 
-saveConfidenceIntervals(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], "outputs", "cell_counts_CI.csv");
+dev.off();
 
-pdf(paste("plots", "cell_counts.pdf", sep=.Platform$file.sep));
-
-hist(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], col=rgb(0.8,0.0,0.0,0.5), freq = TRUE, border="black", main="Cell Counts", ylab="Number of Embryos",xlab="Number of Cells", xlim=c(10,40), ylim=c(0,10), breaks=seq(from = 10, to = 40, by = 2.5));
-hist(cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], col=rgb(0.0,0.8,0.0,0.5), freq = TRUE, border="black", breaks=seq(from = 10, to = 40, by = 2.5), add=TRUE);
-legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
+pdf(paste("plots", "cell_count_error_versus_cell_number.pdf", sep=.Platform$file.sep));
+boxplot(Cell_Count_Error~Ground_Truth_Cell_Count, allData[!duplicated(allData$Index),], main="Cell Count Error", xlab="Cell Number", ylab="Cell Count Error", notch=TRUE, col=(c("darkgreen")));
+legend("topright", c("2"), fill=c("darkgreen"));
 
 dev.off();
