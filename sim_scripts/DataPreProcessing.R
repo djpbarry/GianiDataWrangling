@@ -21,8 +21,8 @@ for (f in files){
   colnames(gtFoundCol) <- c(GROUND_TRUTH_FOUND);
   nucGianiData <- cbind(nucGianiData, gtFoundCol);
   
-  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 7))
-  colnames(appendage) <- c(GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z,  gianiColNames[5], CENTROID_ERROR, VOL_ERROR, NORM_VOL_ERROR);
+  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 10))
+  colnames(appendage) <- c(GT_PROP_VOL, GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z,  gianiColNames[5], GD_PROP_VOL, CENTROID_ERROR, VOL_ERROR, NORM_VOL_ERROR, PROP_VOL_ERROR);
   
   thisData <- cbind(groundTruthData, appendage);
   
@@ -54,6 +54,16 @@ for (f in files){
       nucGianiData[[GROUND_TRUTH_FOUND]][i] <- 1;
     }
   }
+  
+  sumGTVol <- sum(thisData[[GT_CELL_VOLUME_MIC]]);
+  sumGDVol <- sum(thisData[[gianiColNames[5]]]);
+  
+  for(i in 1:nGT){  
+      thisData[[GT_PROP_VOL]][i] <- thisData[[GT_CELL_VOLUME_MIC]][i] / sumGTVol;
+      thisData[[GD_PROP_VOL]][i] <- thisData[[gianiColNames[5]]][i] / sumGDVol;
+      thisData[[PROP_VOL_ERROR]][i] <- thisData[[GD_PROP_VOL]][i] - thisData[[GT_PROP_VOL]][i];
+  }
+  
   snrStartPos <- regexpr(SNR, f) + nchar(SNR);
   snrEndPos <- snrStartPos + regexpr(.Platform$file.sep, substr(f, snrStartPos, nchar(f))) - 2;
   snr <- as.numeric(substr(f, snrStartPos, snrEndPos));
