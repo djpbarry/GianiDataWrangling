@@ -1,7 +1,7 @@
 library(Rmisc);
 
 CONF_LEVEL <- 0.95;
-directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/sim_data";
+directory <- "Z:/working/barryd/hpc/output/";
 INDEX = "Index";
 NUCLEUS <- "Nucleus";
 CYTOPLASM <- "Cytoplasm";

@@ -7,7 +7,7 @@ legend("topright", c("2"), fill=c("darkgreen"));
 dev.off();
 
 pdf(paste("plots", "norm_volume_error_versus_snr.pdf", sep=.Platform$file.sep));
-summary<-boxplot(Normalised_Volume_Error~snr, data=allData, main="Normalised Volume Error Versus SNR", xlab="SNR", ylab="Normalised Volume Error", notch=TRUE, plot=FALSE, col=(c("darkgreen")));
+boxplot(Normalised_Volume_Error~snr, data=allData, main="Normalised Volume Error Versus SNR", xlab="SNR", ylab="Normalised Volume Error", notch=TRUE, col=(c("darkgreen")));
 legend("topright", c("2"), fill=c("darkgreen"));
 
 dev.off();
@@ -24,7 +24,7 @@ legend("topright", c("2"), fill=c("darkgreen"));
 
 dev.off();
 
-pdf(paste("plots", "norm_volume_error_versus_z", sep=.Platform$file.sep));
+pdf(paste("plots", "norm_volume_error_versus_z.pdf", sep=.Platform$file.sep));
 
 plot(allData[allData$snr==1,names(allData) %in% c(GT_CENTROID_Z)], allData[allData$snr==1,names(allData) %in% c(NORM_VOL_ERROR)], xlab="Z (microns)", main="Normalised Volume Error Versus Z", ylab="Normalised Volume Error", ylim=c(0,1), xlim=c(20,120), col="red", pch=15);
 points(allData[allData$snr==2,names(allData) %in% c(GT_CENTROID_Z)], allData[allData$snr==2,names(allData) %in% c(NORM_VOL_ERROR)], col="green", pch=15);
