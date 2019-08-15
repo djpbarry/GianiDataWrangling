@@ -29,7 +29,11 @@ LABEL <- "Label";
 MEASURED_N <- "Measured_Cell_Count";
 GROUND_TRUTH_N <- "Ground_Truth_Cell_Count";
 VOL_ERROR <- "Volume_Error";
-NORM_VOL_ERROR <- "Normalised_Volume_Error"
+NORM_VOL_ERROR <- "Normalised_Volume_Error";
+GT_PROP_VOL <- "Ground_Truth_Proportion_Of_Volume";
+GD_PROP_VOL <- "Measured_Proportion_Of_Volume";
+PROP_VOL_ERROR <- "Proportionate_Volume_Error";
+
 
 euclidDistance <- function(v1, v2){
   if(length(v1) != length(v2)) return(NaN);
