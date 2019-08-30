@@ -1,5 +1,7 @@
 library(Rmisc);
 library(ggplot2);
+library(RColorBrewer);
+library(hrbrthemes);
 
 CONF_LEVEL <- 0.95;
 directory <- "Z:/working/barryd/hpc/output/";
