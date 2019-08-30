@@ -1,7 +1,8 @@
 library(Rmisc);
+library(ggplot2);
 
 CONF_LEVEL <- 0.95;
-directory <- "Z:/working/barryd/hpc/output/snr2.0/run_0";
+directory <- "Z:/working/barryd/hpc/output";
 INDEX = "Index";
 NUCLEUS <- "Nucleus";
 CYTOPLASM <- "Cytoplasm";
@@ -30,6 +31,7 @@ IM_CENTROID_Z <- "Nucleus.Position.Z";
 GROUND_TRUTH_FOUND <- "Ground_Truth_Found";
 CENTROID_ERROR <- "Centroid_Error";
 CELL_COUNT_ERROR <- "Cell_Count_Error";
+PROP_CELL_COUNT_ERROR <- "Proportional_Cell_Count_Error";
 LABEL <- "Label";
 MEASURED_N <- "Measured_Cell_Count";
 GROUND_TRUTH_N <- "Ground_Truth_Cell_Count";

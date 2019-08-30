@@ -32,13 +32,13 @@ points(allData[allData$snr==3,names(allData) %in% c(GT_CENTROID_Z)], allData[all
 
 dev.off();
 
-pdf(paste("plots", "proportionate_volume_error_versus_snr.pdf", sep=.Platform$file.sep));
-boxplot(Proportionate_Volume_Error~snr, data=allData, main="Proportionate Volume Error Versus SNR", xlab="SNR", ylab="Proportionate Volume Error", notch=TRUE, col=c("red", "green", "blue"));
+pdf(paste("plots", "proportionate_volume_error_versus_snr.pdf", sep=.Platform$file.sep), pointsize=20);
+boxplot(Proportionate_Volume_Error~snr, data=allData, main="", xlab="SNR", ylab="Proportionate Volume Error", notch=TRUE, col=c("blue"));
 
 dev.off();
 
-pdf(paste("plots", "proportionate_volume_error_versus_cell_number.pdf", sep=.Platform$file.sep));
-boxplot(Proportionate_Volume_Error~Ground_Truth_Cell_Count, data=allData, main="Proportionate Volume Error Versus Cell Count", xlab="Cell Count", ylab="Proportionate Volume Error", notch=TRUE, col=(c("blue")));
+pdf(paste("plots", "proportionate_volume_error_versus_cell_number.pdf", sep=.Platform$file.sep), pointsize=20);
+boxplot(Proportionate_Volume_Error~Ground_Truth_Cell_Count, data=allData, main="", xlab="Cell Count", ylab="Proportionate Volume Error", notch=TRUE, col=(c("blue")));
 #legend("topright", c("2"), fill=c("blue"));
 
 dev.off();

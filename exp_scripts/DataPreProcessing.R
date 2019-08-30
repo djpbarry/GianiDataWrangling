@@ -1,4 +1,4 @@
-source("scripts/Definitions.R");
+source("exp_scripts/Definitions.R");
 
 nuc <- 1;
 cyto <- 3;
@@ -59,7 +59,7 @@ for (f in files){
   if(grepl("18.06.10", f) || (grepl("19.06.10", f) && !(grepl("_S13_", f) || grepl("_S15_", f) || grepl("_S6_", f)))){
     channel <- abs(channel - 1);
   }
-  thisData <- read.csv(f);
+  thisData <- read.csv(f,  encoding="UTF-8", stringsAsFactors=FALSE);
   cols <- colnames(thisData);
   n <- nrow(thisData);
   for(tp in treatedPatterns){
@@ -107,7 +107,7 @@ for (f in files){
                                    INTEGRATED_DENSITY));
     morphData <- NULL;
     if(channel == 0){
-      dataEntries <- c(thisData$Volume..Voxels.[i], thisData$Volume..µm.3.[i], thisData$Surface.Area..Voxels.[i], thisData$Surface.Area..µm.2.[i]);
+      dataEntries <- c(thisData$Volume..Voxels.[i], thisData$Volume...U.00B5.m.3.[i], thisData$Surface.Area..Voxels.[i], thisData$Surface.Area...U.00B5.m.2.[i]);
       morphData <- buildDataFrame(dataEntries,
                                   1,
                                   4,

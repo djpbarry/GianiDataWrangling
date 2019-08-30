@@ -1,4 +1,4 @@
-source("scripts/Definitions.R");
+source("exp_scripts/Definitions.R");
 
 embryoData <- allData[[embryoHeading]];
 embryos <- unique(embryoData);

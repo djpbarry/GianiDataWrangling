@@ -57,9 +57,9 @@ buildDataFrame <- function(data_entries, nRows, nCols, label1, label2, headings)
 }
 
 saveHistogram <- function(outputDirectory, filename, controlData, treatedData, colour1, colour2, heading, xLabel, yLabel, xLimits, yLimits, binning){
-  pdf(paste(outputDirectory, filename, sep=.Platform$file.sep));
+  pdf(paste(outputDirectory, filename, sep=.Platform$file.sep), pointsize=20);
   
-  hist(controlData, col=colour1, border="black", main=heading, ylab=yLabel,xlab=xLabel, xlim=xLimits, ylim=yLimits, breaks=binning);
+  hist(controlData, col=colour1, border="black", main="", ylab=yLabel,xlab=xLabel, xlim=xLimits, ylim=yLimits, breaks=binning);
   hist(treatedData, col=colour2, border="black", breaks=binning, add=TRUE);
   legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
   
@@ -81,9 +81,9 @@ saveConfidenceIntervals <- function(controlData, treatedData, outputDir, filenam
 }
 
 savePlot <- function(outputDir, filename, x, controlData, treatedData, controlErr, treatedErr, title, xLabel, yLabel, yLimits){
-  pdf(paste(outputDir, filename, sep=.Platform$file.sep));
+  pdf(paste(outputDir, filename, sep=.Platform$file.sep), pointsize=20);
   
-  plot(x, controlData, xlab=xLabel, main=title, ylab=yLabel, ylim=yLimits, col="red", pch=15);
+  plot(x, controlData, xlab=xLabel, main="", ylab=yLabel, ylim=yLimits, col="red", pch=15);
   arrows(x, controlData-controlErr, x, controlData+controlErr, length=0.05, angle=90, code=3, col="red");
   
   points(x, treatedData, col="green", pch=15);

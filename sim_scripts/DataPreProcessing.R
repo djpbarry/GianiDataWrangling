@@ -77,8 +77,9 @@ for (f in files){
                      matrix(data=nGT,ncol=1,nrow=nGT),
                      matrix(data=nGD,ncol=1,nrow=nGT),
                      matrix(data=nGD - nGT,ncol=1,nrow=nGT),
+                     matrix(data=(nGD - nGT)/nGT,ncol=1,nrow=nGT),
                      matrix(data=index,ncol=1,nrow=nGT));
-  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, INDEX);
+  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, PROP_CELL_COUNT_ERROR, INDEX);
   
   thisData <- cbind(thisData, extraCols);
   allData <- rbind(allData, thisData);
@@ -86,4 +87,4 @@ for (f in files){
   index <- index + 1;
 }
 
-write.csv(allData, paste("outputs", "all_data.csv", sep="/"));
+write.csv(allData, paste("outputs", "sim_all_data.csv", sep="/"));

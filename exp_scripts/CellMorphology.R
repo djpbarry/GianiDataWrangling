@@ -1,4 +1,4 @@
-source("scripts/Definitions.R");
+source("exp_scripts/Definitions.R");
 
 embryoData <- allData[[embryoHeading]];
 embryos <- unique(embryoData);
@@ -30,8 +30,8 @@ columns <- c(colnames(cellMorph[[CONTROL_VALUE]]), colnames(cellMorph[[TREATED_V
 lightRed <- rgb(0.8,0.0,0.0,0.5);
 lightGreen <- rgb(0.0,0.8,0.0,0.5);
 
-saveHistogram("plots", "nuc_vol.pdf", cellMorph[[CONTROL_VALUE]][[columns[1]]], cellMorph[[TREATED_VALUE]][[columns[4]]], lightRed, lightGreen, "Nuclear Volume", expression(paste("Mean Nuclear Volume (",mu,"m^3)")), NUM_EMB, c(1000,3500), c(0,10), seq(from=1000, to=3500, by=250));
-saveHistogram("plots", "cell_vol.pdf", cellMorph[[CONTROL_VALUE]][[columns[2]]], cellMorph[[TREATED_VALUE]][[columns[5]]], lightRed, lightGreen, "Cell Volume", expression(paste("Mean Cell Volume (",mu,"m^3)")), NUM_EMB, c(4000,18000), c(0,8), seq(from=4000, to=18000, by=2000));
+saveHistogram("plots", "nuc_vol.pdf", cellMorph[[CONTROL_VALUE]][[columns[1]]], cellMorph[[TREATED_VALUE]][[columns[4]]], lightRed, lightGreen, "Nuclear Volume", "Mean Nuclear Volume (microns^3)", NUM_EMB, c(1000,3500), c(0,10), seq(from=1000, to=3500, by=250));
+saveHistogram("plots", "cell_vol.pdf", cellMorph[[CONTROL_VALUE]][[columns[2]]], cellMorph[[TREATED_VALUE]][[columns[5]]], lightRed, lightGreen, "Cell Volume", "Mean Cell Volume (microns^3)", NUM_EMB, c(4000,18000), c(0,8), seq(from=4000, to=18000, by=2000));
 saveHistogram("plots", "nuc_to_cell_vol_ratio.pdf", cellMorph[[CONTROL_VALUE]][[columns[3]]], cellMorph[[TREATED_VALUE]][[columns[6]]], lightRed, lightGreen, "Nuclear/Cell Volume Ratio", "Mean Nuclear:Cell Volume Ratio", NUM_EMB, c(0.1,0.5), c(0,10), seq(from=0.1, to=0.5, by=0.05));
 
 saveConfidenceIntervals(cellMorph[[CONTROL_VALUE]][[columns[1]]][!is.na(cellMorph[[CONTROL_VALUE]][[columns[1]]])], cellMorph[[TREATED_VALUE]][[columns[4]]][!is.na(cellMorph[[TREATED_VALUE]][[columns[4]]])], "outputs", "nuc_vol_CI.csv");

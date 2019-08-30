@@ -1,7 +1,7 @@
 source("imaris_scripts/Definitions.R");
 
 gtDirs <- list.files(path = directory, pattern = "Image Simulator_Output_", recursive = TRUE, full.names = TRUE, include.dirs = TRUE);
-imarisDirs <- list.dirs(path = 'Z:/working/barryd/hpc', recursive = TRUE, full.names = TRUE);
+imarisDirs <- list.dirs(path = 'Z:/working/barryd/hpc/Imaris', recursive = TRUE, full.names = TRUE);
 
 allData <- data.frame();
 
@@ -19,6 +19,10 @@ for (f in gtDirs){
   groundTruthData <- read.csv(file.path(f, GROUND_TRUTH_FILE));
   
   matchingImarisDir<-imarisDirs[lapply(lapply(imarisDirs, grep, pattern=paste(paste(IM_FOLDER_1, paste(SNR, format(snr, digits=1, nsmall=1), sep=""), format(run, digits=0), sep = "_"), IM_FOLDER_2, sep=" "), value=FALSE), length)>0];
+
+  if(length(matchingImarisDir) < 1){
+    next;
+  }
   
   nucPosData <- read.csv(file.path(matchingImarisDir, paste(paste(IM_NUC_POS_FILE_1, paste(SNR, format(snr, digits=1, nsmall=1), sep=""), format(run, digits=0), sep = "_"), IM_NUC_POS_FILE_2, sep=" ")), skip=3);
   cellVolData <- read.csv(file.path(matchingImarisDir, paste(paste(IM_CELL_VOL_FILE_1, paste(SNR, format(snr, digits=1, nsmall=1), sep=""), format(run, digits=0), sep = "_"), IM_CELL_VOL_FILE_2, sep=" ")), skip=3);
@@ -75,8 +79,9 @@ for (f in gtDirs){
                      matrix(data=nGT,ncol=1,nrow=nIM),
                      matrix(data=nIM,ncol=1,nrow=nIM),
                      matrix(data=nIM - nGT,ncol=1,nrow=nIM),
+                     matrix(data=(nIM - nGT) / nGT,ncol=1,nrow=nIM),
                      matrix(data=index,ncol=1,nrow=nIM));
-  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, INDEX);
+  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, PROP_CELL_COUNT_ERROR, INDEX);
   
   thisData <- cbind(thisData, extraCols);
   allData <- rbind(allData, thisData);

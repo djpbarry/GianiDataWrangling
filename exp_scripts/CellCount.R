@@ -1,4 +1,6 @@
-source("scripts/Definitions.R");
+source("exp_scripts/Definitions.R");
+
+par(cex=1.0);
 
 outputHeadings <- c(CONTROL, TREATED);
 
@@ -21,9 +23,9 @@ write.csv(cellCounts, paste("outputs", "cell_counts.csv", sep="/"));
 
 saveConfidenceIntervals(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], "outputs", "cell_counts_CI.csv");
 
-pdf(paste("plots", "cell_counts.pdf", sep=.Platform$file.sep));
+pdf(paste("plots", "cell_counts.pdf", sep=.Platform$file.sep), pointsize=20);
 
-hist(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], col=rgb(0.8,0.0,0.0,0.5), freq = TRUE, border="black", main="Cell Counts", ylab="Number of Embryos",xlab="Number of Cells", xlim=c(10,40), ylim=c(0,10), breaks=seq(from = 10, to = 40, by = 2.5));
+hist(cellCounts[[CONTROL_VALUE]][!is.na(cellCounts[[CONTROL_VALUE]])], col=rgb(0.8,0.0,0.0,0.5), freq = TRUE, border="black", main="", ylab="Number of Embryos",xlab="Number of Cells", xlim=c(10,40), ylim=c(0,10), breaks=seq(from = 10, to = 40, by = 2.5));
 hist(cellCounts[[TREATED_VALUE]][!is.na(cellCounts[[TREATED_VALUE]])], col=rgb(0.0,0.8,0.0,0.5), freq = TRUE, border="black", breaks=seq(from = 10, to = 40, by = 2.5), add=TRUE);
 legend("topright", c(CONTROL, TREATED), fill=c("red", "green"));
 
