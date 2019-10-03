@@ -49,3 +49,4 @@ savePlot("plots", "gata3_nuc_expression_versus_distance.pdf", x, means[,1], mean
 savePlot("plots", "nuc_to_cyto_yap1_expression_ratio_versus_distance.pdf", x, means[,3], means[,4], err[,3], err[,4], "", xLabel, yapExpressLabel, c(0,4));
 
 saveMeanErrors(x, means, err, c(xLabel, gataExpressLabel, yapExpressLabel), "outputs", "expression_versus_distance.csv");
+
