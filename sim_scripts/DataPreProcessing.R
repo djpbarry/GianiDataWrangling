@@ -1,14 +1,15 @@
 source("sim_scripts/Definitions.R");
 
-files <- list.files(path = directory, pattern = "Image Simulator_Output", recursive = TRUE, full.names = TRUE, include.dirs = TRUE);
+gtFiles <- list.files(path = gtDir, pattern = ".csv", recursive = TRUE, full.names = TRUE);
+gianiFiles <- list.files(path = gianiDir, pattern = ".csv", recursive = TRUE, full.names = TRUE);
 
 allData <- data.frame();
 
 index <- 0;
 
-for (f in files){
-  groundTruthData <- read.csv(file.path(f, GROUND_TRUTH_FILE));
-  gianiData <- read.csv(file.path(f, GIANI_FILE));
+for (fileIndex in 1:length(gtFiles)){
+  groundTruthData <- read.csv(gtFiles[fileIndex]);
+  gianiData <- read.csv(gianiFiles[fileIndex]);
   
   gianiColNames <- colnames(gianiData);
   nucGianiData <- subset(gianiData, grepl(NUCLEUS, gianiData[[LABEL]]));
@@ -49,7 +50,7 @@ for (f in files){
       thisData[[GD_CENTROID_Z]][minDistIndex] <- gdz;
       thisData[[CENTROID_ERROR]][minDistIndex] <- minDist;
       thisData[[gianiColNames[5]]][minDistIndex] <- cellGianiData[[gianiColNames[5]]][i];
-      thisData[[VOL_ERROR]][minDistIndex] <- thisData[[gianiColNames[5]]][minDistIndex] - thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
+      thisData[[VOL_ERROR]][minDistIndex] <- abs(thisData[[gianiColNames[5]]][minDistIndex] - thisData[[GT_CELL_VOLUME_MIC]][minDistIndex]);
       thisData[[NORM_VOL_ERROR]][minDistIndex] <- thisData[[VOL_ERROR]][minDistIndex] / thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
       nucGianiData[[GROUND_TRUTH_FOUND]][i] <- 1;
     }
@@ -64,22 +65,17 @@ for (f in files){
       thisData[[PROP_VOL_ERROR]][i] <- thisData[[GD_PROP_VOL]][i] - thisData[[GT_PROP_VOL]][i];
   }
   
-  snrStartPos <- regexpr(SNR, f) + nchar(SNR);
-  snrEndPos <- snrStartPos + regexpr(.Platform$file.sep, substr(f, snrStartPos, nchar(f))) - 2;
-  snr <- as.numeric(substr(f, snrStartPos, snrEndPos));
-  
-  runStartPos <- regexpr(RUN, f) + nchar(RUN);
-  runEndPos <- runStartPos + regexpr(.Platform$file.sep, substr(f, runStartPos, nchar(f))) - 2;
-  run <- as.numeric(substr(f, runStartPos, runEndPos));
+  snrStartPos <- regexpr(SNR, gtFiles[fileIndex]) + nchar(SNR);
+  snrEndPos <- snrStartPos + regexpr("_", substr(gtFiles[fileIndex], snrStartPos, nchar(gtFiles[fileIndex]))) - 2;
+  snr <- as.numeric(substr(gtFiles[fileIndex], snrStartPos, snrEndPos));
   
   extraCols <- cbind(matrix(data=snr,ncol=1,nrow=nGT),
-                     matrix(data=run,ncol=1,nrow=nGT),
                      matrix(data=nGT,ncol=1,nrow=nGT),
                      matrix(data=nGD,ncol=1,nrow=nGT),
                      matrix(data=nGD - nGT,ncol=1,nrow=nGT),
                      matrix(data=(nGD - nGT)/nGT,ncol=1,nrow=nGT),
                      matrix(data=index,ncol=1,nrow=nGT));
-  colnames(extraCols) <- c(SNR, RUN, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, PROP_CELL_COUNT_ERROR, INDEX);
+  colnames(extraCols) <- c(SNR, GROUND_TRUTH_N, MEASURED_N, CELL_COUNT_ERROR, PROP_CELL_COUNT_ERROR, INDEX);
   
   thisData <- cbind(thisData, extraCols);
   allData <- rbind(allData, thisData);

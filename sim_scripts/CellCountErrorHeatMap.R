@@ -6,39 +6,42 @@ cellCounts <- unique(allData[[GROUND_TRUTH_N]]);
 snrs<-sort(snrs);
 cellCounts<-sort(cellCounts);
 
-cellCountErrors <- data.frame(matrix(data=0.0,nrow=length(cellCounts),ncol=length(snrs)));
-colnames(cellCountErrors) <- snrs;
-rownames(cellCountErrors) <- cellCounts;
-
-entryCounts <- data.frame(cellCountErrors);
+cellCountErrors <- data.frame();
 
 for(i in snrs){
-  temp<-allData[allData[[SNR]] == i, ];
-  temp<-temp[!duplicated(temp[[INDEX]]),];
-  snrCol <- match(i, snrs);
-  for(j in 1:nrow(temp)){
-    nCells<-temp[[GROUND_TRUTH_N]][j];
-    cellRow <- match(nCells, cellCounts);
-    cellCountErrors[cellRow, snrCol] <- cellCountErrors[cellRow, snrCol] + temp[[PROP_CELL_COUNT_ERROR]][j];
-    entryCounts[cellRow, snrCol] <- entryCounts[cellRow, snrCol] + 1;
+  temp1<-allData[allData[[SNR]] == i, ];
+  for(j in cellCounts){
+    temp2 <- temp1[temp1$Ground_Truth_Cell_Count == j, ];
+    errors <- temp2[!is.nan(temp2$Centroid_Error),];
+    normFactor <- sum(errors$Cell_Volume_Microns_Cubed) / sum(errors$Volume..µm.3.);
+    print(normFactor);
+    cellCountErrors <- rbind(cellCountErrors, c(i, j, mean(errors$Centroid_Error), mean(errors$Normalised_Volume_Error), normFactor * mean(errors$Normalised_Volume_Error)));
   }
 }
 
-for(i in 1:nrow(cellCountErrors)){
-  for(j in 1:ncol(cellCountErrors)){
-    if(entryCounts[i, j] > 0){
-      cellCountErrors[i, j] <- cellCountErrors[i, j] / entryCounts[i, j];
-    }
-  }
-}
+colnames(cellCountErrors) <- c(SNR, "N_CELLS", "MEAN_CENTROID_ERROR", "VOLUME_ERROR", "CORRECTED_VOLUME_ERROR");
 
-pdf(paste("plots", "sim_cell_count_errors.pdf", sep=.Platform$file.sep));
+#pdf(paste("plots", "sim_cell_count_errors.pdf", sep=.Platform$file.sep));
 
 #heatmap(as.matrix(cellCountErrors), Colv = NA, Rowv = NA, col=colorRampPalette(brewer.pal(8, "RdYlBu"))(16), xlab="SNR", ylab="Cell Number", cexCol=1.0);
 
-dev.off();
+#dev.off();
 
 heatMapData <- allData[!duplicated(allData[[INDEX]]),];
+axislabel <- element_text(hjust=0.5, size=12);
 
-ggplot(heatMapData, aes(snr, Ground_Truth_Cell_Count, fill=Proportional_Cell_Count_Error)) + 
-  geom_tile() + scale_fill_gradient(low="blue", high="red") + theme_ipsum();
+p <- ggplot(heatMapData, aes(as.character(snr), Ground_Truth_Cell_Count, fill=Proportional_Cell_Count_Error)) + 
+  geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Cell Count Error");
+p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
+
+p <- ggplot(cellCountErrors, aes(as.character(snr), N_CELLS, fill=MEAN_CENTROID_ERROR)) + 
+  geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Localisation Error");
+p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
+
+p <- ggplot(cellCountErrors, aes(as.character(snr), N_CELLS, fill=VOLUME_ERROR)) + 
+  geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Segmentation Error");
+p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
+
+p <- ggplot(cellCountErrors, aes(as.character(snr), N_CELLS, fill=CORRECTED_VOLUME_ERROR)) + 
+  geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Segmentation Error");
+p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
