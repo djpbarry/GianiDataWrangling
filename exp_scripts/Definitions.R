@@ -2,7 +2,7 @@ library(Rmisc);
 library(beeswarm);
 
 CONF_LEVEL <- 0.95;
-directory <- "D:/OneDrive - The Francis Crick Institute/Working Data/Niakan/Claudia/GIANI_Paper";
+directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/experimental_data";
 treatmentHeading = "Treatment";
 CONTROL_VALUE <- 1;
 TREATED_VALUE <- 2;
@@ -12,6 +12,7 @@ CYTOPLASM <- "Cytoplasm";
 CELL <- "Cell";
 YAP <- "YAP1";
 GATA <- "GATA3";
+DAPI <- "DAPI";
 MEAN_INTENSITY <- "Mean_Intensity";
 STD_INTENSITY <- "STD_Intensity";
 MIN_INTENSITY <- "Min_Intensity";
