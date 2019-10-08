@@ -38,7 +38,7 @@ NORM_VOL_ERROR <- "Normalised_Volume_Error";
 GT_PROP_VOL <- "Ground_Truth_Proportion_Of_Volume";
 GD_PROP_VOL <- "Measured_Proportion_Of_Volume";
 PROP_VOL_ERROR <- "Proportionate_Volume_Error";
-
+NORM_DIST <- "Normalised_Distance_to_Centre";
 
 euclidDistance <- function(v1, v2){
   if(length(v1) != length(v2)) return(NaN);

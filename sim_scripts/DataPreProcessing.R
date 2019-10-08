@@ -22,8 +22,8 @@ for (fileIndex in 1:length(gtFiles)){
   colnames(gtFoundCol) <- c(GROUND_TRUTH_FOUND);
   nucGianiData <- cbind(nucGianiData, gtFoundCol);
   
-  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 10))
-  colnames(appendage) <- c(GT_PROP_VOL, GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z,  gianiColNames[5], GD_PROP_VOL, CENTROID_ERROR, VOL_ERROR, NORM_VOL_ERROR, PROP_VOL_ERROR);
+  appendage <- data.frame(matrix(data = NaN, nrow = nGT, ncol = 11))
+  colnames(appendage) <- c(GT_PROP_VOL, GD_CENTROID_X, GD_CENTROID_Y, GD_CENTROID_Z,  gianiColNames[5], GD_PROP_VOL, CENTROID_ERROR, VOL_ERROR, NORM_VOL_ERROR, PROP_VOL_ERROR, NORM_DIST);
   
   thisData <- cbind(groundTruthData, appendage);
   
@@ -50,19 +50,21 @@ for (fileIndex in 1:length(gtFiles)){
       thisData[[GD_CENTROID_Z]][minDistIndex] <- gdz;
       thisData[[CENTROID_ERROR]][minDistIndex] <- minDist;
       thisData[[gianiColNames[5]]][minDistIndex] <- cellGianiData[[gianiColNames[5]]][i];
-      thisData[[VOL_ERROR]][minDistIndex] <- abs(thisData[[gianiColNames[5]]][minDistIndex] - thisData[[GT_CELL_VOLUME_MIC]][minDistIndex]);
+      thisData[[VOL_ERROR]][minDistIndex] <- thisData[[gianiColNames[5]]][minDistIndex] - thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
       thisData[[NORM_VOL_ERROR]][minDistIndex] <- thisData[[VOL_ERROR]][minDistIndex] / thisData[[GT_CELL_VOLUME_MIC]][minDistIndex];
       nucGianiData[[GROUND_TRUTH_FOUND]][i] <- 1;
+      thisData[[NORM_DIST]] <- gianiData[[NORM_DIST]][i];
     }
   }
   
-  sumGTVol <- sum(thisData[[GT_CELL_VOLUME_MIC]]);
-  sumGDVol <- sum(thisData[[gianiColNames[5]]]);
+  sumGTVol <- sum(thisData[[GT_CELL_VOLUME_MIC]][!is.nan(thisData[[GT_CELL_VOLUME_MIC]])]);
+  sumGDVol <- sum(thisData[[gianiColNames[5]]][!is.nan(thisData[[gianiColNames[5]]])]);
+  normFactor <- sumGTVol / sumGDVol;
   
   for(i in 1:nGT){  
       thisData[[GT_PROP_VOL]][i] <- thisData[[GT_CELL_VOLUME_MIC]][i] / sumGTVol;
       thisData[[GD_PROP_VOL]][i] <- thisData[[gianiColNames[5]]][i] / sumGDVol;
-      thisData[[PROP_VOL_ERROR]][i] <- thisData[[GD_PROP_VOL]][i] - thisData[[GT_PROP_VOL]][i];
+      thisData[[PROP_VOL_ERROR]][i] <- normFactor * thisData[[GD_PROP_VOL]][i] - thisData[[GT_PROP_VOL]][i];
   }
   
   snrStartPos <- regexpr(SNR, gtFiles[fileIndex]) + nchar(SNR);

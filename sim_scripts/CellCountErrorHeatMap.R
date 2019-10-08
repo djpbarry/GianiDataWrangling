@@ -13,9 +13,7 @@ for(i in snrs){
   for(j in cellCounts){
     temp2 <- temp1[temp1$Ground_Truth_Cell_Count == j, ];
     errors <- temp2[!is.nan(temp2$Centroid_Error),];
-    normFactor <- sum(errors$Cell_Volume_Microns_Cubed) / sum(errors$Volume..µm.3.);
-    print(normFactor);
-    cellCountErrors <- rbind(cellCountErrors, c(i, j, mean(errors$Centroid_Error), mean(errors$Normalised_Volume_Error), normFactor * mean(errors$Normalised_Volume_Error)));
+    cellCountErrors <- rbind(cellCountErrors, c(i, j, mean(errors$Centroid_Error), mean(abs(errors$Normalised_Volume_Error)), mean(abs(errors$Proportionate_Volume_Error))));
   }
 }
 
@@ -28,11 +26,11 @@ colnames(cellCountErrors) <- c(SNR, "N_CELLS", "MEAN_CENTROID_ERROR", "VOLUME_ER
 #dev.off();
 
 heatMapData <- allData[!duplicated(allData[[INDEX]]),];
-axislabel <- element_text(hjust=0.5, size=12);
+axislabel <- element_text(hjust=0.5, size=18);
 
 p <- ggplot(heatMapData, aes(as.character(snr), Ground_Truth_Cell_Count, fill=Proportional_Cell_Count_Error)) + 
   geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Cell Count Error");
-p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
+p + theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
 
 p <- ggplot(cellCountErrors, aes(as.character(snr), N_CELLS, fill=MEAN_CENTROID_ERROR)) + 
   geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Localisation Error");
@@ -45,3 +43,6 @@ p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axi
 p <- ggplot(cellCountErrors, aes(as.character(snr), N_CELLS, fill=CORRECTED_VOLUME_ERROR)) + 
   geom_tile() + scale_fill_gradient(low="blue", high="red") + xlab("SNR") + ylab("Number of Cells") + labs(fill = "Segmentation Error");
 p + theme(axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel);
+
+#plot(x, controlData, xlab=xLabel, main=title, ylab=yLabel, ylim=yLimits, col="red", pch=15);
+plot(allData$Normalised_Distance_to_Centre, allData$Normalised_Volume_Error);
