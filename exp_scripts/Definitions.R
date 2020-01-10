@@ -1,6 +1,7 @@
 library(Rmisc);
 library(beeswarm);
 
+dist_thresh = 0.65;
 CONF_LEVEL <- 0.95;
 directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/experimental_data";
 treatmentHeading = "Treatment";

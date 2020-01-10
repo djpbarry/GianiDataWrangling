@@ -2,10 +2,11 @@ library(Rmisc);
 library(ggplot2);
 library(RColorBrewer);
 library(hrbrthemes);
+library(dplyr)
 
 CONF_LEVEL <- 0.95;
-gtDir <- "Z:/working/barryd/hpc/input/GIANI_Paper/sim_data/sim_images_ground_truth";
-gianiDir <- "Z:/working/barryd/hpc/input/GIANI_Paper/sim_data/sim_images_output";
+gtDir <- "Z:/working/barryd/hpc/output/sim_images_ground_truth";
+gianiDir <- "Z:/working/barryd/hpc/output/sim_images_output";
 INDEX = "Index";
 NUCLEUS <- "Nucleus";
 CYTOPLASM <- "Cytoplasm";
