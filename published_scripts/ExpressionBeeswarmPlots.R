@@ -29,12 +29,20 @@ gataData <- expData[complete.cases(expData),];
 #beeswarm(NormGata ~ Description, data = gataData, pch = 16, cex = 0.75, col = c(2:5), add = TRUE);
 
 ggplot(gataData, aes(x=Description, y=NormGata, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  geom_segment(aes(x = 1, xend = 3, y=2, yend=2), color=black, size=0.75) +
+  geom_text(label='p < 0.001',x=2, y=0.37, color=black,size=6) +
+  geom_segment(aes(x = 2, xend = 4, y=3, yend=3), color=black, size=0.75) +
+  geom_text(label='n.s.',x=3, y=0.55, color=black,size=6) +
+  geom_segment(aes(x = 1, xend = 2, y=1.4, yend=1.4), color=black, size=0.75) +
+  geom_text(label='n.s.',x=1.5, y=0.21, color=black,size=6) +
+  geom_segment(aes(x = 3, xend = 4, y=1.4, yend=1.4), color=black, size=0.75) +
+  geom_text(label='p < 0.01',x=3.5, y=0.21, color=black,size=6) +
   scale_color_manual(values=cc) +
   #ylim(c(0,100)) +
   theme_linedraw() +
-  scale_y_log10() +
+  scale_y_log10(limits=c(0.02,4)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +
   guides(fill = "none", color="none") + xlab("") + ylab("Nuclear GATA3/DAPI Expression");
@@ -45,8 +53,10 @@ ggplot(gataData, aes(x=Description, y=NormGata, color=Description)) +
 wilcox.test(subset(gataData, gataData$Treatment == 1)$NormGata ~ subset(gataData, gataData$Treatment == 1)$Inner)
 wilcox.test(subset(gataData, gataData$Treatment == 2)$NormGata ~ subset(gataData, gataData$Treatment == 2)$Inner)
 
-wilcox.test(subset(gataData, gataData$Inner == FALSE)$NormGata ~ subset(gataData, gataData$Inner == FALSE)$Treatment)
-wilcox.test(subset(gataData, gataData$Inner == TRUE)$NormGata ~ subset(gataData, gataData$Inner == TRUE)$Treatment)
+wilcox.test(subset(gataData, gataData$Inner == "Outer")$NormGata ~ subset(gataData, gataData$Inner == "Outer")$Treatment)
+wilcox.test(subset(gataData, gataData$Inner == "Inner")$NormGata ~ subset(gataData, gataData$Inner == "Inner")$Treatment)
+
+?subset
 
 #dev.off();
 
@@ -57,20 +67,28 @@ wilcox.test(subset(gataData, gataData$Inner == TRUE)$NormGata ~ subset(gataData,
 
 
 ggplot(expData, aes(x=Description, y=NormYap, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  geom_segment(aes(x = 1, xend = 3, y=16, yend=16), color=black, size=0.75) +
+  geom_text(label='p < 0.0001',x=2, y=1.26, color=black,size=6) +
+  geom_segment(aes(x = 2, xend = 4, y=21, yend=21), color=black, size=0.75) +
+  geom_text(label='p < 0.0001',x=3, y=1.38, color=black,size=6) +
+  geom_segment(aes(x = 1, xend = 2, y=12.5, yend=12.5), color=black, size=0.75) +
+  geom_text(label='n.s.',x=1.5, y=1.15, color=black,size=6) +
+  geom_segment(aes(x = 3, xend = 4, y=12.5, yend=12.5), color=black, size=0.75) +
+  geom_text(label='p < 0.0001',x=3.5, y=1.15, color=black,size=6) +
   scale_color_manual(values=cc) +
   #ylim(c(0,100)) +
   theme_linedraw() +
-  scale_y_log10() +
+  scale_y_log10(limits=c(0.2,25)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +
   guides(fill = "none", color="none") + xlab("") + ylab("Nuclear/Cytoplasmic YAP1 Expression");
 
 
 
-wilcox.test(subset(expData, expData$Inner == FALSE)$NormYap ~ subset(expData, expData$Inner == FALSE)$Treatment)
-wilcox.test(subset(expData, expData$Inner == TRUE)$NormYap ~ subset(expData, expData$Inner == TRUE)$Treatment)
+wilcox.test(subset(expData, expData$Inner == "Outer")$NormYap ~ subset(expData, expData$Inner == "Outer")$Treatment)
+wilcox.test(subset(expData, expData$Inner == "Inner")$NormYap ~ subset(expData, expData$Inner == "Inner")$Treatment)
 
 wilcox.test(subset(expData, expData$Treatment == 1)$NormYap ~ subset(expData, expData$Treatment == 1)$Inner)
 wilcox.test(subset(expData, expData$Treatment == 2)$NormYap ~ subset(expData, expData$Treatment == 2)$Inner)

@@ -56,8 +56,8 @@ controlData <- subset(cellData, cellData$Treatment == CONTROL_VALUE);
 #beeswarm(nCells ~ Inner, data = controlData, pch = 16,cex=0.75, col = c(2:4), add = TRUE);
 
 ggplot(controlData, aes(x=Description, y=nCells, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
   scale_color_manual(values=c(blue,orange)) +
   #ylim(c(0,100)) +
   theme_linedraw() +
@@ -78,8 +78,11 @@ wilcox.test(controlData$Nucleus_Volume_microns ~controlData$Inner)
 ks.test(controlData[ controlData$Inner,]$Nucleus_Volume_microns,controlData[!controlData$Inner,]$Nucleus_Volume_microns);
 
 ggplot(controlData, aes(x=Description, y=Nucleus_Volume_microns, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  ylim(0,7000) +
+  geom_segment(aes(x = 1, xend = 2, y=6000, yend=6000), color=black, size=0.75) +
+  geom_text(label='n.s.',x=1.5, y=6400, color=black,size=6) +
   scale_color_manual(values=c(blue,orange)) +
   #ylim(c(0,100)) +
   theme_linedraw() +
@@ -97,8 +100,11 @@ ggplot(controlData, aes(x=Description, y=Nucleus_Volume_microns, color=Descripti
 wilcox.test(controlData$Cell_Volume_microns ~controlData$Inner)
 
 ggplot(controlData, aes(x=Description, y=Cell_Volume_microns, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  ylim(0,32000) +
+  geom_segment(aes(x = 1, xend = 2, y=29000, yend=29000), color=black, size=0.75) +
+  geom_text(label='n.s.',x=1.5, y=31000, color=black,size=6) +
   scale_color_manual(values=c(blue,orange)) +
   #ylim(c(0,100)) +
   theme_linedraw() +
@@ -119,10 +125,12 @@ wilcox.test(controlData$VolRatio ~controlData$Inner)
 
 
 ggplot(controlData, aes(x=Description, y=VolRatio, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  geom_segment(aes(x = 1, xend = 2, y=200, yend=200), color=black, size=0.75) +
+  geom_text(label='p < 0.001',x=1.5, y=2.5, color=black,size=6) +
   scale_color_manual(values=c(blue,orange)) +
-  scale_y_log10() +
+  scale_y_log10("Cell/Nuclear Volume Ratio", limits=c(1,500)) +
   theme_linedraw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +
@@ -137,10 +145,12 @@ ggplot(controlData, aes(x=Description, y=VolRatio, color=Description)) +
 #beeswarm(YapRatio ~ Inner, data = controlData, pch = 16, cex = 0.75, col = c(2:4), add = TRUE);
 
 ggplot(controlData, aes(x=Description, y=YapRatio, color=Description)) + 
-  geom_jitter(width=0.25,alpha=0.35) +
-  geom_boxplot(width=0.2,color=black,coef=20,alpha=0.8) +
+  geom_jitter(width=0.15,alpha=0.5,size=3) +
+  geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
+  geom_segment(aes(x = 1, xend = 2, y=12.5, yend=12.5), color=black, size=0.75) +
+  geom_text(label='p < 0.0001',x=1.5, y=1.17, color=black,size=6) +
   scale_color_manual(values=c(blue,orange)) +
-  scale_y_log10() +
+  scale_y_log10("Nuclear/Cytoplasmic YAP1 Expression", limits=c(0.3,15)) +
   theme_linedraw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +

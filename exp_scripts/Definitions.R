@@ -1,7 +1,8 @@
 library(Rmisc);
 library(beeswarm);
+library(ggplot2);
 
-dist_thresh = 0.65;
+dist_thresh = 0.5;
 CONF_LEVEL <- 0.95;
 directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/experimental_data";
 treatmentHeading = "Treatment";

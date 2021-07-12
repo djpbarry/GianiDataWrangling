@@ -4,7 +4,7 @@ nuc <- 1;
 cyto <- 2;
 cell <- 3;
 
-directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/experimental_data";
+directory <- "Z:/working/barryd//GIANI_Paper/experimental_data";
 
 files <- list.files(path = directory, pattern = ".csv", recursive = TRUE, full.names = TRUE);
 

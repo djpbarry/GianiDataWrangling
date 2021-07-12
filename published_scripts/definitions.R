@@ -36,11 +36,19 @@ IM_PROP_VOL <- "Measured_Proportion_Of_Volume";
 M_NUC_CENTROID_X <- "Measured_Nuc_Centroid_X";
 M_NUC_CENTROID_Y <- "Measured_Nuc_Centroid_Y";
 M_NUC_CENTROID_Z <- "Measured_Nuc_Centroid_Z";
+IM_NUC_CENTROID_X <- "Imaris_Nuc_Centroid_X";
+IM_NUC_CENTROID_Y <- "Imaris_Nuc_Centroid_Y";
+IM_NUC_CENTROID_Z <- "Imaris_Nuc_Centroid_Z";
+IMARIS_X <- "Cell.Position.X";
+IMARIS_Y <- "Cell.Position.Y";
+IMARIS_Z <- "Cell.Position.Z";
 M_CELL_CENTROID_X <- "Measured_Cell_Centroid_X";
 M_CELL_CENTROID_Y <- "Measured_Cell_Centroid_Y";
 M_CELL_CENTROID_Z <- "Measured_Cell_Centroid_Z";
 GROUND_TRUTH_FOUND <- "Ground_Truth_Found";
 NUC_CENTROID_ERROR <- "Nuc_Centroid_Error";
+GIANI_NUC_CENTROID_ERROR <- "GIANI_Nuc_Centroid_Error";
+IMARIS_NUC_CENTROID_ERROR <- "Imaris_Nuc_Centroid_Error";
 CELL_CENTROID_ERROR <- "Cell_Centroid_Error";
 CELL_COUNT_ERROR <- "Cell_Count_Error";
 PROP_CELL_COUNT_ERROR <- "Proportional_Cell_Count_Error";
@@ -74,6 +82,7 @@ blue <- "#0000FF";
 grey <- "#999999";
 orange <- "#FF6600";
 black <- "#000000";
+white <- "#FFFFFF";
 
 dist_thresh <- 0.5;
 

@@ -1,10 +1,22 @@
-source("exp_scripts/Definitions.R");
+source("published_scripts/Definitions.R");
 
 nuc <- 1;
 cyto <- 2;
 cell <- 3;
 
+directory <- "Z:/working/barryd/hpc/input/GIANI_Paper/experimental_data";
+
 files <- list.files(path = directory, pattern = ".csv", recursive = TRUE, full.names = TRUE);
+
+#inner control flawed
+files <- files[!grepl("19.06.10LeicaSp5/GIANI v2.068_Experiment.lif_S30_Output",files)];
+
+#outer control flawed
+files <- files[!grepl("19.07.05LeicaSp5/GIANI v2.068_Experiment.lif_S13_Output",files)];
+files <- files[!grepl("19.07.05LeicaSp5/GIANI v2.068_Experiment.lif_S11_Output",files)];
+files <- files[!grepl("18.07.22/GIANI v2.068_Experiment.lif_S20_Output",files)];
+files <- files[!grepl("19.07.05LeicaSp5/GIANI v2.068_Experiment.lif_S14_Output",files)];
+files <- files[!grepl("18.07.22/GIANI v2.068_Experiment.lif_S19_Output",files)];
 
 allData <- vector(mode = "list", length = 3);
 
@@ -94,20 +106,33 @@ for (f in files){
       } else if(c == 3 && reverse){
         channelName = channelLabels[2];
       }
-      intensData[[c]] <- buildDataFrame(c(thisData[[paste("Mean_Pixel_Value_C", channelIndices[c], sep="")]][i],
-                                          thisData[[paste("Pixel_Standard_Deviation_C", channelIndices[c], sep="")]][i],
-                                          thisData[[paste("Min_Pixel_Value_C", channelIndices[c], sep="")]][i],
-                                          thisData[[paste("Max_Pixel_Value_C", channelIndices[c], sep="")]][i],
-                                          thisData[[paste("Integrated_Density_C", channelIndices[c], sep="")]][i]),
-                                   1,
-                                   5,
-                                   regionLabel,
-                                   channelName,
-                                   c(MEAN_INTENSITY,
-                                     STD_INTENSITY,
-                                     MIN_INTENSITY,
-                                     MAX_INTENSITY,
-                                     INTEGRATED_DENSITY));
+      if(grepl("19.07.05", f) && c == 2){
+        intensData[[c]] <- buildDataFrame(rep(NaN, 5),
+                                          1,
+                                          5,
+                                          regionLabel,
+                                          channelName,
+                                          c(MEAN_INTENSITY,
+                                            STD_INTENSITY,
+                                            MIN_INTENSITY,
+                                            MAX_INTENSITY,
+                                            INTEGRATED_DENSITY));
+      } else {
+        intensData[[c]] <- buildDataFrame(c(thisData[[paste("Mean_Pixel_Value_C", channelIndices[c], sep="")]][i],
+                                            thisData[[paste("Pixel_Standard_Deviation_C", channelIndices[c], sep="")]][i],
+                                            thisData[[paste("Min_Pixel_Value_C", channelIndices[c], sep="")]][i],
+                                            thisData[[paste("Max_Pixel_Value_C", channelIndices[c], sep="")]][i],
+                                            thisData[[paste("Integrated_Density_C", channelIndices[c], sep="")]][i]),
+                                     1,
+                                     5,
+                                     regionLabel,
+                                     channelName,
+                                     c(MEAN_INTENSITY,
+                                       STD_INTENSITY,
+                                       MIN_INTENSITY,
+                                       MAX_INTENSITY,
+                                       INTEGRATED_DENSITY));
+      }
     }
     intensData <- do.call(cbind, intensData);
     dataEntries <- c(thisData$Volume..Voxels.[i], thisData$Volume..µm.3.[i], thisData$Surface.Area..Voxels.[i], thisData$Surface.Area..µm.2.[i]);
@@ -129,7 +154,7 @@ for (f in files){
                    morphData,
                    treated);
     } else {
-      row <- cbind(intensData, morphData);
+      row <- cbind(data.frame(Embryo=embryoIndex, Index=thisData$Index[i]), intensData, morphData);
     }
     allData[[label]] <- rbind(allData[[label]], row);
   }
@@ -137,4 +162,9 @@ for (f in files){
   embryoIndex <- embryoIndex + 1;
 }
 
-allData <- do.call(cbind, allData);
+#allData <- do.call(cbind, allData);
+
+allData1 <- merge(allData[[1]], allData[[2]], by=c("Embryo", "Index"));
+allData <- merge(allData1, allData[[3]], by=c("Embryo", "Index"));
+
+length(unique(allData[allData$Treatment==2,]$Embryo))
