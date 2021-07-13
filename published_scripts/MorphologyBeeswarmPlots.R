@@ -82,7 +82,7 @@ ggplot(controlData, aes(x=Description, y=Nucleus_Volume_microns, color=Descripti
   geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
   ylim(0,7000) +
   geom_segment(aes(x = 1, xend = 2, y=6000, yend=6000), color=black, size=0.75) +
-  geom_text(label='n.s.',x=1.5, y=6400, color=black,size=6) +
+  geom_text(label='n.s.',x=1.5, y=6400, color=black,size=10) +
   scale_color_manual(values=c(blue,orange)) +
   #ylim(c(0,100)) +
   theme_linedraw() +
@@ -104,7 +104,7 @@ ggplot(controlData, aes(x=Description, y=Cell_Volume_microns, color=Description)
   geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
   ylim(0,32000) +
   geom_segment(aes(x = 1, xend = 2, y=29000, yend=29000), color=black, size=0.75) +
-  geom_text(label='n.s.',x=1.5, y=31000, color=black,size=6) +
+  geom_text(label='n.s.',x=1.5, y=31000, color=black,size=10) +
   scale_color_manual(values=c(blue,orange)) +
   #ylim(c(0,100)) +
   theme_linedraw() +
@@ -128,7 +128,7 @@ ggplot(controlData, aes(x=Description, y=VolRatio, color=Description)) +
   geom_jitter(width=0.15,alpha=0.5,size=3) +
   geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
   geom_segment(aes(x = 1, xend = 2, y=200, yend=200), color=black, size=0.75) +
-  geom_text(label='p < 0.001',x=1.5, y=2.5, color=black,size=6) +
+  geom_text(label='p < 0.001',x=1.5, y=2.5, color=black,size=10) +
   scale_color_manual(values=c(blue,orange)) +
   scale_y_log10("Cell/Nuclear Volume Ratio", limits=c(1,500)) +
   theme_linedraw() +
@@ -148,16 +148,16 @@ ggplot(controlData, aes(x=Description, y=YapRatio, color=Description)) +
   geom_jitter(width=0.15,alpha=0.5,size=3) +
   geom_boxplot(width=0.6,color=black,coef=20,alpha=0.0) +
   geom_segment(aes(x = 1, xend = 2, y=12.5, yend=12.5), color=black, size=0.75) +
-  geom_text(label='p < 0.0001',x=1.5, y=1.17, color=black,size=6) +
+  geom_text(label='p < 0.0001',x=1.5, y=1.2, color=black,size=10) +
   scale_color_manual(values=c(blue,orange)) +
-  scale_y_log10("Nuclear/Cytoplasmic YAP1 Expression", limits=c(0.3,15)) +
+  scale_y_log10("Nuclear/Cytoplasmic\nYAP1 Expression", limits=c(0.3,20)) +
   theme_linedraw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +
-  guides(fill = "none", color="none") + xlab("") + ylab(expression("Nuclear/Cytoplasmic YAP1 Expression"));
+  guides(fill = "none", color="none") + xlab("");
 
 wilcox.test(controlData$YapRatio ~controlData$Inner)
-
+print(paste("Nuclear/Cytoplasmic", "YAP1 Expression", sep="\n"))
 #boxplot(YapRatio ~ Inner, data = treatedData, outline = FALSE, main = "", ylab = "Nuclear/Cytoplasmic Yap1 Expression", xlab = "", names = c("Outer", "Inner"), ylim=c(0.3,12), log="y");
 #beeswarm(YapRatio ~ Inner, data = treatedData, pch = 16, cex = 0.75, col = c(2:4), add = TRUE);
 

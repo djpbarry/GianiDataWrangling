@@ -1,12 +1,9 @@
 source("published_scripts/definitions.R");
 library(ggplot2);
 
-axislabel <- element_text(hjust=0.5, size=30, colour = "black");
-cc <- scales::seq_gradient_pal(blue,orange,"Lab")(seq(0,1,length.out=4));
-
-groundTruthData <- read.csv('E:/Dropbox (The Francis Crick)/Debugging/Giani/Ground_Truth.csv');
-gianiData <- read.csv('E:/Dropbox (The Francis Crick)/Debugging/Giani/GIANI-3.1.2_Output_with_Ground_Truth.csv');
-imarisData <- read.csv('E:/Dropbox (The Francis Crick)/Debugging/Giani/Sim_Image_snr1.000000_ncells2000_Statistics/Sim_Image_snr1.000000_ncells2000_Cell_Position_with_Ground_Truth.csv');
+groundTruthData <- read.csv('D:/Dropbox (The Francis Crick)/Debugging/Giani/Ground_Truth.csv');
+gianiData <- read.csv('D:/Dropbox (The Francis Crick)/Debugging/Giani/GIANI-3.1.2_Output_with_Ground_Truth.csv');
+imarisData <- read.csv('D:/Dropbox (The Francis Crick)/Debugging/Giani/Sim_Image_snr1.000000_ncells2000_Statistics/Sim_Image_snr1.000000_ncells2000_Cell_Position_with_Ground_Truth.csv');
 gianiColNames <- colnames(gianiData);
 nucGianiData <-  subset(gianiData, grepl(NUCLEUS, gianiData[[LABEL]]));
 nGD <- nrow(nucGianiData);
@@ -129,7 +126,8 @@ ggplot(allData, aes(x=Detected, y=Nearest_Neighbour, color=Detected)) +
   theme_linedraw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, legend.title = axislabel, plot.title = axislabel) +
-  guides(fill = "none", color="none") + xlab("") + ylab("Distance to Nearest Neighbour (\U03BCm)");
+  guides(fill = "none", color="none") + xlab(element_blank()) + ylab("Distance to Nearest\nNeighbour (\U03BCm)") +
+  scale_x_discrete(breaks=unique(allData$Detected), labels = c("Both", "GIANI\nOnly", "Imaris\nOnly", "Neither"));
 
 ggplot(errorData, aes(x=error, fill=type)) +
   geom_density(alpha=.35) +
@@ -161,10 +159,10 @@ ggplot(errorData, aes(x=error, y=Nearest_Neighbour, color=type)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.title = element_blank(),legend.position=c(0.85,0.2),legend.background = element_blank(), legend.box.background = element_rect(colour = "black"), legend.text = axislabel, axis.text.y = axislabel, axis.text.x = axislabel, axis.title.x = axislabel, axis.title.y = axislabel, plot.title = axislabel) +
 #  theme(legend.position = c(0.9,0.15)) +
-  scale_y_log10() +
-  scale_x_log10() +
+  scale_y_log10("Distance to Nearest\nNeighbour (\U03BCm)") +
+  scale_x_log10(limits=c(0.05,200)) +
   labs(color="") +
-  xlab("Localisation Error (\U03BCm)") + ylab("Distance to Nearest Neighbour (\U03BCm)");
+  xlab("Localisation Error (\U03BCm)");
 
 filename <- "all_advanced_giani_data.csv";
 

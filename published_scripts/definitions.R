@@ -75,20 +75,25 @@ MIN_INTENSITY <- "Min_Intensity";
 MAX_INTENSITY <- "Max_Intensity";
 INTEGRATED_DENSITY <- "Integrated_Density";
 
-red <- "#DD0000";
-green <- "#008800";
-yellow <- "#FFFF00";
+red <- "#D50000";
+green <- "#009E00";
+yellow <- "#FFDD00";
 blue <- "#0000FF";
+purple <- "#CC00FF";
+lblue <- "#5656FF";
 grey <- "#999999";
 orange <- "#FF6600";
+lorange <- "#FF9966";
 black <- "#000000";
 white <- "#FFFFFF";
+magenta <- "#FF00D5";
 
 dist_thresh <- 0.5;
 
 cc <- scales::seq_gradient_pal(blue,orange,"Lab")(seq(0,1,length.out=4));
+cc2 <- scales::seq_gradient_pal(purple, yellow,"Lab")(seq(0,1,length.out=4));
 
-axislabel <- element_text(hjust=0.5, size=30, colour = "black");
+axislabel <- element_text(hjust=0.5, size=40, colour = "black");
 
 euclidDistance <- function(v1, v2){
   if(length(v1) != length(v2)) return(NaN);
