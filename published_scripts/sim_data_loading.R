@@ -20,7 +20,7 @@ allData <- data.frame();
 
 index <- 0;
 
-simpleGiani <- FALSE;
+simpleGiani <- TRUE;
 
 for (fileIndex in 1:length(gtFiles)) {
   groundTruthData <- read.csv(gtFiles[fileIndex])

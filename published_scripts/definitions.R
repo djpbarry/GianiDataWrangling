@@ -93,7 +93,8 @@ dist_thresh <- 0.5;
 cc <- scales::seq_gradient_pal(blue,orange,"Lab")(seq(0,1,length.out=4));
 cc2 <- scales::seq_gradient_pal(purple, yellow,"Lab")(seq(0,1,length.out=4));
 
-axislabel <- element_text(hjust=0.5, size=40, colour = "black");
+axislabel <- element_text(hjust=0.5, size=45, colour = "black");
+heatmap_axislabel <- element_text(hjust=0.5, size=35, colour = "black");
 
 euclidDistance <- function(v1, v2){
   if(length(v1) != length(v2)) return(NaN);
